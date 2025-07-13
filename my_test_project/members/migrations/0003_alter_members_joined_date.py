@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('members', '0002_members_joined_date_members_phone'),
+        ("members", "0002_members_joined_date_members_phone"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='members',
-            name='joined_date',
+            model_name="members",
+            name="joined_date",
             field=models.DateField(auto_now=True, null=True),
         ),
     ]
