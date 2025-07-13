@@ -9,7 +9,7 @@ def defaults():
     Member.objects.create(firstname = 'Abhiman', lastname = 'Mahajan', phone=8080123444)
 
 class Command(BaseCommand):
-    help = "Add default 4 members to the database's Member table"
+    help = "Add members to the database's Member table"
     
     def add_arguments(self, parser: CommandParser) -> None:
         parser.add_argument('--firstname', type=str, help='Firstname of the member')
