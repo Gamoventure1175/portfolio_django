@@ -1,14 +1,18 @@
-<!DOCTYPE html>
-<html>
-    <body>
-        <h1>All Members</h1>
-        <ul>
-            {% for member in members %}
-                <li>
-                    <h1>{{member.firstname}} {{member.lastname}}</h1>
-                    <p><a href="details/{{member.id}}">view more details</a></p>
-                </li>
-            {% endfor %}
-        </ul>
-    </body>
-</html>
+{% extends 'master.html' %}
+
+{% block title %}
+All Members
+{% endblock %}
+
+{% block content %}
+<h1>All Members</h1>
+<ul>
+    {% for member in members %}
+        <li>
+            <h1>{{member.firstname}} {{member.lastname}}</h1>
+            <p><a href="details/{{member.id}}">view more details</a></p>
+        </li>
+    {% endfor %}
+</ul>
+<a href="/">Go back to main</a>
+{% endblock %}

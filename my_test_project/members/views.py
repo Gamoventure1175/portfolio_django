@@ -17,3 +17,8 @@ def details(request: HttpRequest, member_id: int):
         'member': member,
     }
     return HttpResponse(template.render(context, request))
+
+
+def main(request: HttpRequest):
+    template = loader.get_template('main_index.html')
+    return HttpResponse(template.render())
