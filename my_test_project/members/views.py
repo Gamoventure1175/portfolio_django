@@ -1,3 +1,4 @@
+from typing import Any
 from django.http import HttpResponse, HttpRequest
 from django.template import loader
 from .models import Member
@@ -27,5 +28,13 @@ def main(request: HttpRequest):
     return render(request, template_name="main_index.html")
 
 
+def my_name(name: str):
+    if name:
+        return name.upper()
+    return "Gaurav Abhiman Mahajan"
+
+
 def sample(request: HttpRequest):
-    return render(request, "pages/sample.html")
+    name1 = my_name("Some Random Person")
+    context: dict[str, Any] = {"somerandom": 83, "name": name1}
+    return render(request, "pages/sample.html", context)
