@@ -25,7 +25,15 @@ def details(request: HttpRequest, member_id: int):
 
 def main(request: HttpRequest):
     # template = loader.get_template("main_index.html")
-    return render(request, template_name="main_index.html")
+    my_list_of_things = [
+        "Enterpreneurship",
+        "System Architecture",
+        "Network Integration",
+        "AI Infrastructure",
+    ]
+
+    context = {"what_we_do": my_list_of_things}
+    return render(request, template_name="main_index.html", context=context)
 
 
 def my_name(name: str):

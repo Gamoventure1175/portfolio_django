@@ -8,13 +8,13 @@ Main Page
 <h1>
     Welcome to the Example Company
 </h1>
+<p>The current count of our expertise is: {{ what_we_do|length }}</p>
 <p>
     We expertise in the following:
     <ol>
-        <li>Enterpreneurship</li>
-        <li>System Architecture</li>
-        <li>Network Integration</li>
-        <li>AI Infrastructure</li>
+        {% for work in what_we_do %}
+            <li>{{work}}</li>
+        {% endfor %}
     </ol>
 </p>
 
