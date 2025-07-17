@@ -1,17 +1,21 @@
 from typing import Any
 from django.http import HttpResponse, HttpRequest
 from django.template import loader
+from django.views.generic import TemplateView
 from .models import Member
 from django.shortcuts import render
 
 
-def members(request: HttpRequest):
-    template = loader.get_template("all_members.html")
-    my_members = Member.objects.all()
-    context = {
-        "members": my_members,
-    }
-    return HttpResponse(template.render(context, request))
+class AboutPage(TemplateView):
+    """About page - class based view"""
+
+    template_name = "pages/about.html"
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        all_members = Member.objects.all()
+        context["members"] = all_members
+        return context
 
 
 def details(request: HttpRequest, member_id: int):
