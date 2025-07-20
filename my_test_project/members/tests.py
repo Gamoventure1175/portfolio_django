@@ -21,9 +21,23 @@ class SamplePageTest(TestCase):
 
 
 class HomePageTest(TestCase):
-    def test_member_page_url(self):
+    def test_main_page_url(self):
+        """Test to check if the url "/" is working correctly"""
         response: HttpResponse = self.client.get("/")
         self.assertEqual(response.status_code, 200)
+
+    def test_main_page_details(self):
+        """
+        ## Test to check the following details related to the main page:
+        1. The 'main' name is assigned to the '/' url.
+        2. The right template is being used or not? (main_index.html)
+        3. The page contains the right content: Gamoventure.Inc
+        """
+
+        response = self.client.get(reverse("main"))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "main_index.html")
+        self.assertContains(response, "Gamoventure.Inc")
 
 
 class AboutPageTest(
