@@ -1,19 +1,26 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %} {% endblock %}</title>
+    <title>{% block title %} {% endblock title %}</title>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
 </head>
 <body>
-    <header style="width: 100vw; background-color: bisque;">
+    <header>
+
         <ul>
             <li><a href="/">Home</a></li>
+            <li><a href="{% url 'blogs' %}">Blogs</a></li>
             <li><a href="/about">About</a></li>
         </ul>
     </header>
-    {% block content %}
+    <div>
+        {% block content %}
 
-    {% endblock %}
+        {% endblock content %}
+    </div>
 </body>
 </html>
