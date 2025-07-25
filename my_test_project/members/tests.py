@@ -3,6 +3,8 @@ from django.http import HttpResponse
 from django.urls import reverse
 from .models import Member
 
+# test
+
 # Creating simple tests to chekc 200 status codes for our 'members', 'home'and 'sample' page
 
 
