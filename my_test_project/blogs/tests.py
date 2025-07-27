@@ -9,7 +9,12 @@ class BlogTest(TestCase):
     @classmethod
     def setUpTestData(cls) -> None:
         cls.user = get_user_model().objects.create_user(
-            email="dummy@gmail.com", username="groot", password="Xyzutiwoe"
+            # objects.create_user is a derived function from objects.create
+            # objects.create_user provided password encryption
+            # if objects.create is used to create a user, the user's credentials (password) will not be encrypted
+            email="dummy@gmail.com",
+            username="groot",
+            password="Xyzutiwoe",
         )
         cls.blog = Blog.objects.create(
             title="something", body="nothing new", author=cls.user
