@@ -73,3 +73,43 @@ class BlogTest(TestCase):
         self.assertTemplateUsed(response, "blogs/blog_detail.html")
         self.assertContains(response, f"{self.blog.title}")
         self.assertEqual(no_response.status_code, 404)
+
+    def test_blog_create_view(self):
+        """
+        ## Test to check the following things for the blog app's create view:
+            1. The url '/blogs/new/' works and returns 200 response
+            2. The url name 'blog_new' is routing to the right page
+            3. The correct template (/blogs/blog_create.html) is being used
+            5. A new blog get's created and returns the response 302 redirect
+            6. The new blog created has the correct title
+            7. The new blog created has the correct body
+            4. The content of the .html file is correct when redirected to the blog's absolute url
+
+        """
+
+        create_blog_response = self.client.post(
+            reverse("blog_new"),
+            {"title": "Test Title", "body": "Test Body", "author": self.user.pk},
+        )
+        
+        url_response = self.client.get(reverse('blog_new'))
+        
+        # self.fail(f"Response code of form submission: {create_blog_response.status_code}") # status_code returned is '200'
+        # self.fail(f"Response content of form submission: {create_blog_response.content}") # threw an error because I was using self.user
+        
+        # Remember, when passing data to a form in django form fields, often when passing the foreign key, it needs to object.id, not the 
+        # object instance itself. The model instance itself should only be passed when you are establishing the relationship in python
+
+        
+        self.assertEqual(self.client.get('/blogs/new/').status_code, 200)
+        self.assertEqual(url_response.status_code, 200)
+        self.assertTemplateUsed(url_response, template_name='blogs/blog_new.html')
+        self.assertEqual(create_blog_response.status_code, 302)
+        self.assertEqual(Blog.objects.last().title, 'Test Title')
+        self.assertEqual(Blog.objects.last().body, 'Test Body')
+        
+        # Though this is a long line however, 
+        # this get's the response for the newly created blog's url (blog's page)
+        new_blog_page_url_response = self.client.get(Blog.objects.last().get_absolute_url())
+        self.assertContains(new_blog_page_url_response, f'{Blog.objects.last().title}')
+        

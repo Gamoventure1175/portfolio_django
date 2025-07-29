@@ -9,5 +9,13 @@ Details of {{blog.title}} blog
     <h2>{{ blog.title }}</h2>
     <p>{{ blog.body }}</p>
 </div>
+
+<div>
+    <a href="{% url 'blog_update' blog.pk %}">+ update this blog</a>
+</div>
+
+<div>
+    <a href="{% url 'blog_delete' blog.pk %}">- delete this blog</a>
+</div>
 {% endblock %}
 
