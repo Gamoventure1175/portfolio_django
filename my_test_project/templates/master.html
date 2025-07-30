@@ -11,11 +11,26 @@
 <body>
     <header>
 
-        <ul>
+        <ul class="nav">
             <li><a href="/">Home</a></li>
             <li><a href="{% url 'blogs' %}">Blogs</a></li>
             <li><a href="/about">About</a></li>
         </ul>
+        
+        <div>
+            {% if user.is_authenticated %}
+            <h4>Welcome {{user.username}}</h4>
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Log Out</button>
+            </form>
+
+            {% else %}
+            <p>You have not logged in!</p>
+            <a href="{% url 'login' %}">Log In</a>
+            <a href="{% url 'signup' %}">Sign Up</a>
+            {% endif %}
+        </div>
     </header>
     <div>
         {% block content %}

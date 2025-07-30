@@ -6,18 +6,25 @@ header {
   border-bottom: 1px solid #999;
   margin-bottom: 2rem;
   display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 header h1 {
   color: red;
   text-decoration: none;
 }
-.nav-left {
-  margin-right: auto;
+
+header ul {
+  text-decoration: none;
 }
-.nav-right {
+
+.nav {
   display: flex;
-  padding-top: 2rem;
+  text-decoration: none;
+  align-items: center;
+  gap: 22px;
 }
+
 .post-entry {
   margin-bottom: 2rem;
 }

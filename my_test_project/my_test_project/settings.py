@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "members",
     "blogs",
+    "accounts",
 ]
 
 MIDDLEWARE = [
@@ -101,6 +102,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Redirect for when user logs in
+LOGIN_REDIRECT_URL = "main"
+LOGOUT_REDIRECT_URL = "main"
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
