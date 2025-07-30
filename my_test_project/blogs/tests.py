@@ -10,7 +10,7 @@ class BlogTest(TestCase):
     def setUpTestData(cls) -> None:
         cls.user = get_user_model().objects.create_user(
             # objects.create_user is a derived function from objects.create
-            # objects.create_user provided password encryption
+            # objects.create_user provides password encryption
             # if objects.create is used to create a user, the user's credentials (password) will not be encrypted
             email="dummy@gmail.com",
             username="groot",
@@ -91,25 +91,103 @@ class BlogTest(TestCase):
             reverse("blog_new"),
             {"title": "Test Title", "body": "Test Body", "author": self.user.pk},
         )
-        
-        url_response = self.client.get(reverse('blog_new'))
-        
+
+        url_response = self.client.get(reverse("blog_new"))
+
         # self.fail(f"Response code of form submission: {create_blog_response.status_code}") # status_code returned is '200'
         # self.fail(f"Response content of form submission: {create_blog_response.content}") # threw an error because I was using self.user
-        
-        # Remember, when passing data to a form in django form fields, often when passing the foreign key, it needs to object.id, not the 
+
+        # Remember, when passing data to a form in django form fields, often when passing the foreign key, it needs to object.id, not the
         # object instance itself. The model instance itself should only be passed when you are establishing the relationship in python
 
-        
-        self.assertEqual(self.client.get('/blogs/new/').status_code, 200)
+        self.assertEqual(self.client.get("/blogs/new/").status_code, 200)
         self.assertEqual(url_response.status_code, 200)
-        self.assertTemplateUsed(url_response, template_name='blogs/blog_new.html')
+        self.assertTemplateUsed(url_response, template_name="blogs/blog_new.html")
         self.assertEqual(create_blog_response.status_code, 302)
-        self.assertEqual(Blog.objects.last().title, 'Test Title')
-        self.assertEqual(Blog.objects.last().body, 'Test Body')
-        
-        # Though this is a long line however, 
+        self.assertEqual(Blog.objects.last().title, "Test Title")  # type:ignore
+        self.assertEqual(Blog.objects.last().body, "Test Body")  # type:ignore
+
+        # Though this is a long line however,
         # this get's the response for the newly created blog's url (blog's page)
-        new_blog_page_url_response = self.client.get(Blog.objects.last().get_absolute_url())
-        self.assertContains(new_blog_page_url_response, f'{Blog.objects.last().title}')
-        
+        new_blog_page_url_response = self.client.get(
+            Blog.objects.last().get_absolute_url()  # type:ignore
+        )
+        self.assertContains(
+            new_blog_page_url_response, f"{Blog.objects.last().title}"  # type:ignore
+        )
+
+    def test_blog_update_view(self):
+        """
+        ## Test to check the following things for the blog app's update view:
+            1. The url '/blogs/<int: pk>/update' works and returns 200 response
+            2. The url name 'blog_update' is routing to the right page
+            3. The correct template (/blogs/blog_update.html) is being used
+            5. The blog get's updated and returns the response 302 redirect
+            6. The updated blog has the correct title
+            7. The updated blog has the correct body
+            4. The content of the .html file is correct when redirected to the blog's absolute url
+        """
+
+        # self.fail(
+        #     f"Absolute URL of self.blog: {reverse('blog_update', kwargs={"pk": self.blog.pk})}"
+        # )  # testing if the absolute url is correct.
+
+        update_blog_response = self.client.post(
+            reverse("blog_update", kwargs={"pk": self.blog.pk}),
+            {"title": "New Title for Something", "body": "New Body for Something"},
+        )
+
+        url_response = self.client.get(
+            reverse("blog_update", kwargs={"pk": self.blog.pk})
+        )
+
+        self.assertEqual(
+            self.client.get(f"/blogs/{self.blog.pk}/update/").status_code, 200
+        )
+        self.assertEqual(url_response.status_code, 200)
+        self.assertTemplateUsed(url_response, "blogs/blog_update.html")
+        self.assertEqual(update_blog_response.status_code, 302)
+        self.assertEqual(Blog.objects.last().title, "New Title for Something")
+        self.assertEqual(Blog.objects.last().body, "New Body for Something")
+
+        updated_blog_page_response = self.client.get(
+            Blog.objects.last().get_absolute_url()
+        )
+        self.assertContains(updated_blog_page_response, f"{Blog.objects.last().title}")
+
+    def test_blog_delete_view(self):
+        """
+        ## Test to check the following things for the blog app's update view:
+            1. The url '/blogs/<int: pk>/delete' works and returns 200 response
+            2. The url name 'blog_delete' is routing to the right page
+            3. The correct template (/blogs/blog_delete.html) is being used
+            4. The blog_delete page has the correct content. (Delete Blog 'blog.pk')
+            5. The blog get's deleted and returns the response 302 redirect
+            6. The blog get's deleted and redirects to the url named 'blogs'
+            4. The content when directed to the 'blogs' url is missing the deleted blog
+
+        """
+
+        blog_title_before_deleting = self.blog.title
+
+        url_response = self.client.get(
+            reverse("blog_delete", kwargs={"pk": self.blog.pk})
+        )
+
+        self.assertEqual(
+            self.client.get(f"/blogs/{self.blog.pk}/delete/").status_code, 200
+        )
+        self.assertEqual(url_response.status_code, 200)
+        self.assertTemplateUsed(url_response, "blogs/blog_delete.html")
+        self.assertContains(url_response, f"Delete blog {self.blog.pk}")
+
+        # The blog will get deleted right, that's why added the blog_delete_response after the tests for the blog to be deleted have been completed
+        blog_delete_repsonse = self.client.post(
+            reverse("blog_delete", kwargs={"pk": self.blog.pk})
+        )
+
+        self.assertEqual(blog_delete_repsonse.status_code, 302)
+        self.assertRedirects(blog_delete_repsonse, reverse("blogs"))
+        self.assertNotContains(
+            self.client.get(reverse("blogs")), blog_title_before_deleting
+        )
